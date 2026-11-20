@@ -1,0 +1,180 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Unbounded", "Inter", ui-sans-serif, sans-serif;
+
+  --color-ink-950: #050505;
+  --color-ink-900: #0a0a0a;
+  --color-ink-800: #141417;
+  --color-ink-700: #1d1d22;
+  --color-line: rgb(255 255 255 / 0.09);
+
+  --color-brand-300: #5cc8ec;
+  --color-brand-400: #1fa3d1;
+  --color-brand-500: #007ba7;
+  --color-brand-600: #006688;
+  --color-sky-brand: #ff2d95;
+
+  --color-good: #34d399;
+  --color-warn: #fbbf24;
+  --color-bad: #f87171;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  color: #f2f2f5;
+  background-color: var(--color-ink-900);
+  background-image:
+    radial-gradient(900px 500px at 85% -10%, rgb(0 123 167 / 0.28), transparent 60%),
+    radial-gradient(700px 450px at -5% 10%, rgb(255 45 149 / 0.13), transparent 60%);
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: rgb(31 163 209 / 0.45);
+}
+
+/* ---------- Design system ---------- */
+.glass {
+  background: linear-gradient(180deg, rgb(255 255 255 / 0.07), rgb(255 255 255 / 0.035));
+  border: 1px solid var(--color-line);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-radius: 1rem;
+  box-shadow: 0 8px 30px rgb(0 0 0 / 0.35);
+}
+
+.field {
+  width: 100%;
+  border-radius: 0.75rem;
+  border: 1px solid rgb(255 255 255 / 0.12);
+  background: rgb(5 5 5 / 0.55);
+  padding: 0.65rem 0.85rem;
+  font-size: 0.9rem;
+  color: #f1f2ff;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.field::placeholder {
+  color: rgb(242 242 245 / 0.35);
+}
+.field:focus {
+  border-color: var(--color-brand-400);
+  box-shadow: 0 0 0 3px rgb(31 163 209 / 0.25);
+}
+.field[aria-invalid="true"] {
+  border-color: var(--color-bad);
+}
+select.field option {
+  background: #141417;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.75rem;
+  padding: 0.6rem 1.1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: transform 0.12s, background 0.15s, opacity 0.15s, box-shadow 0.15s;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.btn:not(:disabled):active {
+  transform: translateY(1px);
+}
+.btn-primary {
+  color: #fff;
+  background: linear-gradient(135deg, var(--color-brand-500), var(--color-sky-brand));
+  box-shadow: 0 6px 20px rgb(0 123 167 / 0.35);
+}
+.btn-primary:not(:disabled):hover {
+  box-shadow: 0 8px 26px rgb(0 123 167 / 0.55);
+}
+.btn-ghost {
+  color: #f2f2f5;
+  background: rgb(255 255 255 / 0.07);
+  border: 1px solid var(--color-line);
+}
+.btn-ghost:not(:disabled):hover {
+  background: rgb(255 255 255 / 0.13);
+}
+.btn-danger {
+  color: #fecaca;
+  background: rgb(248 113 113 / 0.12);
+  border: 1px solid rgb(248 113 113 / 0.3);
+}
+.btn-danger:not(:disabled):hover {
+  background: rgb(248 113 113 / 0.22);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-brand-400);
+  outline-offset: 2px;
+}
+
+.label {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: rgb(242 242 245 / 0.65);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border-radius: 999px;
+  padding: 0.2rem 0.65rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  border: 1px solid var(--color-line);
+  background: rgb(255 255 255 / 0.06);
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgb(255 255 255 / 0.15);
+  border-radius: 8px;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -400px 0;
+  }
+  100% {
+    background-position: 400px 0;
+  }
+}
+.skeleton {
+  border-radius: 0.75rem;
+  background: linear-gradient(90deg, rgb(255 255 255 / 0.04), rgb(255 255 255 / 0.1), rgb(255 255 255 / 0.04));
+  background-size: 800px 100%;
+  animation: shimmer 1.4s infinite linear;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
