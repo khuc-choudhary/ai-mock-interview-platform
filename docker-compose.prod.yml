@@ -1,0 +1,52 @@
+# Production stack: docker compose -f docker-compose.prod.yml --env-file .env.prod up -d --build
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
+      POSTGRES_DB: mock_interview
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d mock_interview"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      APP_ENV: production
+      DATABASE_URL: postgresql+pg8000://postgres:${POSTGRES_PASSWORD}@db:5432/mock_interview
+      JWT_SECRET: ${JWT_SECRET:?set JWT_SECRET}
+      CORS_ORIGINS: ${PUBLIC_URL}
+      FRONTEND_URL: ${PUBLIC_URL}
+      LLM_API_KEY: ${LLM_API_KEY:-}
+      LLM_BASE_URL: ${LLM_BASE_URL:-https://api.groq.com/openai/v1}
+      LLM_MODEL: ${LLM_MODEL:-openai/gpt-oss-120b}
+      LLM_REASONING_EFFORT: ${LLM_REASONING_EFFORT:-low}
+      WHISPER_BASE_URL: ${WHISPER_BASE_URL:-}
+      WHISPER_API_KEY: ${WHISPER_API_KEY:-}
+      WHISPER_MODEL: ${WHISPER_MODEL:-whisper-large-v3}
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+      SMTP_FROM: ${SMTP_FROM:-}
+
+  web:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: /api
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+
+volumes:
+  pgdata:
